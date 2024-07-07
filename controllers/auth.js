@@ -4,29 +4,15 @@ import jwt from "jsonwebtoken";
 
 export const incNormalPage = async (req, res, next) => {
   try {
-    const { name } = req.query; // Use req.query for GET request
-
-    // Find the user who referred the given user
+    const { name } = req.query;
     let user = await prismaClient.user.findFirst({ where: { name } });
     console.log(user);
-    // if (!user) {
-    //   throw new Error("User not found");
-    // }
-    // let referrer = await prismaClient.user.findFirst({
-    //   where: { name: user.referredBy },
-    // });
-    // if (!referrer) {
-    //   throw new Error("Referrer not found");
-    // }
-
-    // // Update the referrer's incNormalPage count
     user = await prismaClient.user.update({
       where: { id: user.id },
       data: {
         incNormalPage: user.incNormalPage + 1,
       },
     });
-
     res.json({
       incNormalPage: user.incNormalPage,
       incVisitPage: user.incVisitPage,
@@ -39,10 +25,7 @@ export const incNormalPage = async (req, res, next) => {
 export const names=async(req,res,next)=>{
   try {
     const { name } = req.query; 
-
     let user = await prismaClient.user.findFirst({ where: { name } });
-    // console.log(user);
-
     let user2 = await prismaClient.referral.findMany({ where: { userId:user.id } });
     console.log(user2.length);
     let ab=[]
@@ -60,9 +43,7 @@ export const names=async(req,res,next)=>{
 export const incVisitPage = async (req, res, next) => {
   try {
     const { name } = req.query;
-
     let user = await prismaClient.user.findFirst({ where: { name } });
-    // console.log(user);
     user = await prismaClient.user.update({
       where: { id: user.id },
       data: {
@@ -70,7 +51,6 @@ export const incVisitPage = async (req, res, next) => {
         incVisitPage: user.incVisitPage + 1,
       },
     });
-
     res.json({
       incNormalPage: user.incNormalPage,
       incVisitPage: user.incVisitPage,
@@ -90,7 +70,6 @@ export const login = async (req, res, next) => {
     if (!compareSync(password, user.password)) {
       throw Error("Passwords don't match");
     }
-
     const token = jwt.sign(
       {
         userId: user.id,
@@ -107,24 +86,18 @@ export const login = async (req, res, next) => {
 export const register = async (req, res, next) => {
   try {
     const { name, email, password, referredBy } = req.body;
-
-    // Check if the user already exists
     let user = await prismaClient.user.findFirst({ where: { email } });
     if (user) {
       throw new Error("User already exists");
     }
-
-    // Create the new user
     user = await prismaClient.user.create({
       data: {
         name,
         email,
-        password: hashSync(password, 12), // Hash the password
+        password: hashSync(password, 12),
         referredBy,
       },
     });
-
-    // If there is a referrer, update their referredTo array
     if (referredBy) {
       const referrer = await prismaClient.user.findFirst({
         where: {
@@ -143,7 +116,7 @@ export const register = async (req, res, next) => {
       }
     }
 
-    res.json(user); // Respond with the created user
+    res.json(user);
   } catch (error) {
     next(error);
   }

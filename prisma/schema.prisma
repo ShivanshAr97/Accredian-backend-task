@@ -19,7 +19,7 @@ model User {
   incVisitPage  Int @default(0)
   incNormalPage Int @default(0)
 
-  referredTo Referral[] // Establish a relation with the Referral model
+  referredTo Referral[]
 
   @@index([email])
 }

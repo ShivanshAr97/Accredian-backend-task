@@ -11,18 +11,7 @@ export const referCnt = async (req, res, next) => {
       });
       console.log({name,email,referredBy});
       console.log(referrer);
-      //   if (referrer) {
-      //     await prismaClient.referral.create({
-      //       data: {
-      //         referredToName: name,
-      //         userId: referrer.id
-      //       }
-      //     });
-      //   }
     }
-    // res
-    //   .status(201)
-    //   .json({ message: "User created successfully", user: newUser });
   } catch (error) {
     next(error);
   }

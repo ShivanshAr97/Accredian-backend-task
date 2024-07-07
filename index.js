@@ -13,8 +13,8 @@ const app = express()
 app.use(express.json())
 
 const corsOptions ={
-    origin:['http://localhost:5173'], 
-    credentials:true,            //access-control-allow-credentials:true
+    origin:['http://localhost:5173', 'https://accredian-frontend-cas3kecno-shivanshar97s-projects.vercel.app'], 
+    credentials:true,
     optionSuccessStatus:200
   }
   app.use(cors(corsOptions));
